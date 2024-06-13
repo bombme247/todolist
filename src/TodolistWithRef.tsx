@@ -1,8 +1,7 @@
 import { title } from "process"
 import { FilterValuesType } from "./App"
 import { Button } from "./Button"
-import { ChangeEvent, useRef, useState } from "react"
-import { KeyboardEvent } from "react"
+import { useRef } from "react"
 
 type TodolistPropsType = {
   title: string
@@ -10,7 +9,6 @@ type TodolistPropsType = {
   removeTask: (taskId: string) => void
   changeFilter: (newFilterValue: FilterValuesType) => void
   addTask: (title: string) => void
-  changeTaskStatus: (taskId: string, isDone: boolean) => void
 }
 
 export type TaskType = {
@@ -21,13 +19,13 @@ export type TaskType = {
 
 export const Todolist = (props: TodolistPropsType) => {
 
-const [taskTitle, setTaskTitle] = useState("")
+  const taskInputRef = useRef<HTMLInputElement>(null)
 
   const tasksElements: Array<JSX.Element> | JSX.Element = props.tasks.length !== 0
   ? props.tasks.map(task => {
     return (
       <li key={task.id}>
-        <input type="checkbox" checked={task.isDone} onChange={(e)=> props.changeTaskStatus(task.id, e.currentTarget.checked)}/>
+        <input type="checkbox" checked={task.isDone} />
         <span>{task.title}</span>
         <Button onClickHandler={() => props.removeTask(task.id)} title="x"/>
       </li>
@@ -36,29 +34,18 @@ const [taskTitle, setTaskTitle] = useState("")
   : <span>Your tasks list is empty</span>
 
   const addTaskHandler = () => {
-    props.addTask(taskTitle)
-    setTaskTitle("")
+    if (taskInputRef.current) {
+        props.addTask(taskInputRef.current.value)
+      taskInputRef.current.value = ""
+    }
   }
-
-  const changeTaskTitleHandler = (e: ChangeEvent<HTMLInputElement>) => setTaskTitle(e.currentTarget.value)
-
-  const keyDownAddTaskHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-    e.key === "Enter" && addTaskHandler()
-  }
-
-  const isAddTaskBtnDisabled = !taskTitle || taskTitle.length > 25
-
-  const userTaskTitleLengthWarning = taskTitle.length > 15 && <div>Title should contain less than 15 characters</div>
 
   return (
     <div className="todolist">
       <h3>{props.title}</h3>
       <div>
-        <input value={taskTitle} 
-        onChange = {changeTaskTitleHandler} 
-        onKeyDown={keyDownAddTaskHandler}/>
-        <Button title="+" onClickHandler={addTaskHandler} disabled={isAddTaskBtnDisabled}/>
-        {userTaskTitleLengthWarning}
+        <input ref={taskInputRef}/>
+        <Button title="+" onClickHandler={addTaskHandler}/>
           
       </div>
       <ul>

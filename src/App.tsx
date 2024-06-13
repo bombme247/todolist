@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './App.css';
 import { TaskType, Todolist } from './Todolist';
+import { v1 } from 'uuid';
 
 
 export type FilterValuesType = "all"|"active"|"completed"
@@ -11,17 +12,40 @@ function App() {
 
   //state
   const [tasks, setTasks] = useState<Array<TaskType>>([
-    {id: 1, title: "Html", isDone: true},
-    {id: 2, title: "Css", isDone: true},
-    {id: 3, title: "Js", isDone: false},
+    {id: v1(), title: "Html", isDone: true},
+    {id: v1(), title: "Css", isDone: true},
+    {id: v1(), title: "Js", isDone: false},
   ])
 
 
-  const removeTask = (taskId: number) => {
+//create
+  const addTask = (title: string) => {
+    const newTask: TaskType = {
+      id: v1(),
+      title: title,
+      isDone: false
+    }
+    // const copyState = [...tasks]
+    // copyState.push(newTask)
+    // setTasks(copyState)
+    // сокращенный вариант(иммутабельная работа)
+    setTasks([...tasks, newTask])
+
+  }
+
+  //delete
+  const removeTask = (taskId: string) => {
     const newState = tasks.filter(task => task.id !== taskId)
     setTasks(newState)
     console.log(newState)
   }
+
+  //update
+  const changeTaskStatus = (taskId: string, newIsdoneValue: boolean) => {
+    const newState: Array<TaskType> = tasks.map(t => t.id === taskId? {...t, isDone: newIsdoneValue} : t)
+    setTasks(newState)
+  }
+
 
   const [filter, setFilter] = useState<FilterValuesType>("all")
   //какие такси отдать в Туду на отрисовку? => см. filter
@@ -40,7 +64,12 @@ function App() {
 
     return (
         <div className="App">
-          <Todolist title={todolistTitle} tasks={filteredTasksForTodolist} removeTask={removeTask} changeFilter={changeFilter}/>
+          <Todolist title={todolistTitle}
+          tasks={filteredTasksForTodolist}
+          removeTask={removeTask} 
+          changeFilter={changeFilter}
+          addTask={addTask}
+          changeTaskStatus={changeTaskStatus}/> 
         </div>
     );
 }
