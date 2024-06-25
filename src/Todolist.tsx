@@ -1,6 +1,6 @@
 import { FilterValuesType, TaskType } from "./App"
 import { Button } from "./Button"
-import { ChangeEvent, useRef, useState } from "react"
+import { ChangeEvent, useState } from "react"
 import { KeyboardEvent } from "react"
 
 type TodolistPropsType = {
@@ -19,16 +19,6 @@ export const Todolist = (props: TodolistPropsType) => {
 
 const [taskTitle, setTaskTitle] = useState("")
 const [taskInputError, setTaskInputError] = useState<string | null>(null)
-
-// TODO
-// let filteredTasksForTodolist: Array<TaskType> = tasks
-// if(filter === "active"){
-//   filteredTasksForTodolist = tasks.filter(task => task.isDone === false)
-// }
-// if(filter === "completed"){
-//   filteredTasksForTodolist = tasks.filter(task => task.isDone === true)
-// }
-
 
   const tasksElements: Array<JSX.Element> | JSX.Element = props.tasks.length !== 0
   ? props.tasks.map(task => {
