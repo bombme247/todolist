@@ -15,11 +15,11 @@ type TodolistType = {
   filter: FilterValuesType
 }
 
-export type FilterValuesType = "all" | "active" | "completed";
-type TodolistsType = { id: string, title: string, filter: FilterValuesType }
 type TasksType = {
-    [key: string]: TaskType[]
+  [key: string]: TaskType[]
 }
+
+export type FilterValuesType = "all" | "active" | "completed"
 
 function App() {
 
