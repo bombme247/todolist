@@ -12,9 +12,15 @@ export type TaskType = {
 type TodolistType = {
   id: string 
   title: string
-  filter: FilterValuesType
+  // filter: FilterValuesType
 }
 
+type TasksStateType = {
+  [key: string]: {
+    data: object,
+    filter: string
+  }
+}
 
 export type FilterValuesType = "all" | "active" | "completed";
 type TodolistsType = { id: string, title: string, filter: FilterValuesType }
@@ -22,34 +28,7 @@ type TasksType = {
     [key: string]: TaskType[]
 }
 
-// type TasksStateType = {
-//   [key: string]: [{
-//     data: [TodolistType[]],
-//     filter: string
-//   }] 
-// }
-
 function App() {
-
-  // let todolistID1 = v1()
-  // let todolistID2 = v1()
-
-  // let [todolists, setTodolists] = useState<TodolistType[]>([
-  //   { id: todolistID1, title: 'What to learn', filter: 'all' },
-  //   { id: todolistID2, title: 'What to buy', filter: 'all' },
-  // ])
-
-  // let [tasks, setTasks] = useState<TasksType>({
-  //  [todolistID1]: [
-  //     { id: v1(), title: 'HTML&CSS', isDone: true },
-  //     { id: v1(), title: 'JS', isDone: true }, 
-  //     { id: v1(), title: 'ReactJS', isDone: false },
-  //   ],
-  //   [todolistID2]: [
-  //     { id: v1(), title: 'Rest API', isDone: true },
-  //     { id: v1(), title: 'GraphQL', isDone: false },
-  //   ],
-  // })
 
   let todolistId1 = v1();
   let todolistId2 = v1();
@@ -83,17 +62,13 @@ function App() {
   //create
   const addTask = (todolistId: string, title: string) => {
     const newTask = {id: v1(), title:  title, isDone: false}
-    // const copyState = [...tasks]
-    // copyState.push(newTask)
-    // setTasks(copyState)
-    // сокращенный вариант(иммутабельная работа)
+
     setTasks({...tasks, [todolistId]: [...tasks[todolistId], newTask]})
   }
   //delete
   const removeTask = (todolistId: string, taskId: string) => {
     setTasks( {...tasks, [todolistId]: tasks[todolistId].filter(list => list.id !== taskId)} )
-    // const newState = tasks.filter(task => task.id !== taskId)
-    // setTasks(newState)
+
   }
   //update
   const changeTaskStatus = (todolistId: string, taskId: string, isDone: boolean) => {
@@ -101,12 +76,7 @@ function App() {
   } 
 
   const changeFilter = (todolistId: string, filter: FilterValuesType) => {
-    // const currentTodo = todolists.find(list => list.id === todolistId)
-    // if (currentTodo) {
-    // currentTodo.filter = filter
-    // setTodolists([...todolists])
     setTodolists(todolists.map(list => list.id === todolistId ? { ...list, filter: filter } : list))
-    // }
   }
 
 
