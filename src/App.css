@@ -13,3 +13,24 @@
   border-radius: 5px;
   padding: 5px;
 }
+
+.completed-task {
+  text-decoration: line-through;
+  opacity: .5;
+}
+
+.task {
+  font-weight: bold;
+}
+
+.active {
+  background-color: rgb(174, 133, 97);
+  font-weight: 500;
+  color: white;
+  border-radius: 3px;
+}
+
+.taskInputError {
+  border: 2px solid red;
+  border-radius: 3px;
+}
