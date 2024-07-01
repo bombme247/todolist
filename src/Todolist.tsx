@@ -1,7 +1,7 @@
+import { AddItemForm } from "./AddItemForm"
 import { FilterValuesType, TaskType } from "./App"
 import { Button } from "./Button"
-import { ChangeEvent, useState } from "react"
-import { KeyboardEvent } from "react"
+import { EditableSpan } from "./EditableSpan"
 
 type TodolistPropsType = {
   todolistId: string
@@ -13,75 +13,73 @@ type TodolistPropsType = {
   changeTaskStatus: (todolistId: string, taskId: string, isDone: boolean) => void
   filter: FilterValuesType
   removeTodolist: (todolistId: string) => void
+  updateTask: (todolistId: string, taskId: string, newTitle: string) => void
+  updateTodolist: (todolistId: string, title: string) => void
 }
 
 export const Todolist = (props: TodolistPropsType) => {
-
-const [taskTitle, setTaskTitle] = useState("")
-const [taskInputError, setTaskInputError] = useState<string | null>(null)
-
-  const tasksElements: Array<JSX.Element> | JSX.Element = props.tasks.length !== 0
-  ? props.tasks.map(task => {
-    return (
-      <li key={task.id}>
-        <input type="checkbox" checked={task.isDone} onChange={(e)=> props.changeTaskStatus(props.todolistId, task.id, e.currentTarget.checked)}/>
-        <span className={task.isDone ? 'completed-task' : 'task'}>{task.title}</span>
-        <Button onClickHandler={() => props.removeTask(props.todolistId, task.id)} title="x"/>
-      </li>
-    )
-  })
-  : <span>Your tasks list is empty</span>
-
-  const addTaskHandler = () => {
-    if(taskTitle.trim() !== '') {
-      props.addTask(props.todolistId, taskTitle.trim())
-      setTaskTitle("")
-    } else {
-      setTaskInputError('Title should not be empty!')
-    }
-  }
-
-  const changeTaskTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    taskInputError && setTaskInputError(null)
-    setTaskTitle(e.currentTarget.value)
-  }
-
-  const keyDownAddTaskHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-    e.key === "Enter" && addTaskHandler()
-  }
-
-  const isAddTaskBtnDisabled = !taskTitle || taskTitle.length > 25
-
-  const userTaskTitleLengthWarning = taskTitle.length > 15 && <div>Title should contain less than 15 characters</div>
-
-  const userEmptyTaskWarning = taskInputError && <div>{taskInputError}</div>
+  const {
+    title,
+    tasks,
+    filter,
+    removeTask,
+    changeFilter,
+    addTask,
+    changeTaskStatus,
+    todolistId,
+    removeTodolist,
+    updateTask,
+    updateTodolist
+  } = props
 
   const changeFilterTaskHandler = (filter: FilterValuesType) => {
-    props.changeFilter(props.todolistId, filter)
+    changeFilter(props.todolistId, filter)
   }
+  const removeTodolistHandler = () => {
+    removeTodolist(todolistId)
+  }
+  const addTaskHandler = (title: string) => {
+    addTask(props.todolistId, title)
+  }
+const updateTodolistHandler = (title: string) => {
+  updateTodolist(todolistId, title)
+}
+
+const updateTaskHandler = (taskId: string, newTitle: string) => {
+  updateTask(todolistId, taskId, newTitle)
+}
 
   return (
     <div className="todolist">
       <h3>
-        {props.title}
-        <Button title="x" onClickHandler={() => {props.removeTodolist(props.todolistId)}}/>
+        <EditableSpan oldTitle={title} updateItem={updateTodolistHandler}/>
+        <Button title="x" onClickHandler={removeTodolistHandler} />
       </h3>
+      <AddItemForm addItem={addTaskHandler} />
+      {
+        tasks.length !== 0
+          ? <ul>
+            {tasks.map(task => {
+
+// const updateTaskHandler = (newTitle: string) => {
+//   updateTask(todolistId, task.id, newTitle)
+// }
+
+              return (
+                <li key={task.id} className={task.isDone ? 'completed-task' : 'task'}>
+                  <input type="checkbox" checked={task.isDone} onChange={(e) => changeTaskStatus(todolistId, task.id, e.currentTarget.checked)} />
+                  <EditableSpan oldTitle={task.title} updateItem={(newTitle)=>updateTaskHandler(task.id, newTitle)}/>
+                  <Button onClickHandler={() => removeTask(todolistId, task.id)} title="x" />
+                </li>
+              )
+            })}
+          </ul>
+          : <span>Your tasks list is empty</span>
+      }
       <div>
-        <input value={taskTitle} 
-        onChange = {changeTaskTitleHandler} 
-        onKeyDown={keyDownAddTaskHandler}
-        className={taskInputError ? 'taskInputError' : ''}/>
-        <Button title="+" onClickHandler={addTaskHandler} disabled={isAddTaskBtnDisabled}/>
-        {userTaskTitleLengthWarning}
-        {userEmptyTaskWarning}
-      </div>
-      <ul>
-        {tasksElements}
-      </ul>
-      <div>
-        <Button onClickHandler={() => changeFilterTaskHandler("all")} title="All" styles={props.filter === 'all' ? 'active' : ''}/>
-        <Button onClickHandler={() => changeFilterTaskHandler("active")} title="Active" styles={props.filter === 'active' ? 'active' : ''}/>
-        <Button onClickHandler={() => changeFilterTaskHandler("completed")} title="Completed" styles={props.filter === 'completed' ? 'active' : ''}/>
+        <Button onClickHandler={() => changeFilterTaskHandler("all")} title="All" styles={filter === 'all' ? 'active' : ''} />
+        <Button onClickHandler={() => changeFilterTaskHandler("active")} title="Active" styles={filter === 'active' ? 'active' : ''} />
+        <Button onClickHandler={() => changeFilterTaskHandler("completed")} title="Completed" styles={filter === 'completed' ? 'active' : ''} />
       </div>
     </div>
   )
