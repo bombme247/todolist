@@ -2,6 +2,7 @@ import { AddItemForm } from "./AddItemForm"
 import { FilterValuesType, TaskType } from "./App"
 import { Button } from "./Button"
 import { EditableSpan } from "./EditableSpan"
+import { Task } from "./Task"
 
 type TodolistPropsType = {
   todolistId: string
@@ -45,9 +46,9 @@ const updateTodolistHandler = (title: string) => {
   updateTodolist(todolistId, title)
 }
 
-const updateTaskHandler = (taskId: string, newTitle: string) => {
-  updateTask(todolistId, taskId, newTitle)
-}
+// const updateTaskHandler = (taskId: string, newTitle: string) => {
+//   updateTask(todolistId, taskId, newTitle)
+// }
 
   return (
     <div className="todolist">
@@ -66,11 +67,12 @@ const updateTaskHandler = (taskId: string, newTitle: string) => {
 // }
 
               return (
-                <li key={task.id} className={task.isDone ? 'completed-task' : 'task'}>
-                  <input type="checkbox" checked={task.isDone} onChange={(e) => changeTaskStatus(todolistId, task.id, e.currentTarget.checked)} />
-                  <EditableSpan oldTitle={task.title} updateItem={(newTitle)=>updateTaskHandler(task.id, newTitle)}/>
-                  <Button onClickHandler={() => removeTask(todolistId, task.id)} title="x" />
-                </li>
+                // <li key={task.id} className={task.isDone ? 'completed-task' : 'task'}>
+                //   <input type="checkbox" checked={task.isDone} onChange={(e) => changeTaskStatus(todolistId, task.id, e.currentTarget.checked)} />
+                //   <EditableSpan oldTitle={task.title} updateItem={(newTitle)=>updateTaskHandler(task.id, newTitle)}/>
+                //   <Button onClickHandler={() => removeTask(todolistId, task.id)} title="x" />
+                // </li>
+              <Task />
               )
             })}
           </ul>
