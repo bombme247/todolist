@@ -285,9 +285,9 @@ function App() {
   }
   function addTask(title: string, todolistId: string) {
     let newTask = { taskId: v1(), title: title, isDone: false };
-    setTodoFromServer(todoFromServer.map(list =>
+    setTodoFromServer(prevState => prevState.map(list =>
       list.todolistId === todolistId
-        ? { ...list, tasks: [...list.tasks, newTask] }
+        ? { ...list, tasks: [newTask, ...list.tasks ]}
         : list
     ));
   }
