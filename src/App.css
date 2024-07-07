@@ -1,36 +1,28 @@
 .App {
-  padding: 30px;
-  display: flex;
+  /* padding: 30px;
+  display: flex; */
 }
-
+/* 
 .App > div {
   margin-right: 50px;
 }
 
-.todolist {
-  background-color: bisque;
-  border: 1px solid black;
-  border-radius: 5px;
-  padding: 5px;
+.error {
+  border: red 1px solid;
 }
 
-.completed-task {
-  text-decoration: line-through;
-  opacity: .5;
+.error-message {
+  color: red;
 }
 
-.task {
-  font-weight: bold;
+.active-filter {
+  background-color: lightgreen;
 }
 
-.active {
-  background-color: rgb(174, 133, 97);
-  font-weight: 500;
-  color: white;
-  border-radius: 3px;
+.is-done {
+  opacity: 0.5;
 }
-
-.taskInputError {
-  border: 2px solid red;
-  border-radius: 3px;
-}
+.todolist-title-container {
+  display: flex;
+  align-items: center;
+} */

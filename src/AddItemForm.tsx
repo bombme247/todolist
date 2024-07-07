@@ -1,52 +1,63 @@
-import { ChangeEvent, useState } from "react"
-import { Button } from "./Button"
-import { KeyboardEvent } from "react"
+import Button from "@mui/material/Button";
+import {ChangeEvent, KeyboardEvent, useState} from "react";
+import TextField from '@mui/material/TextField';
 
 
-type Props = {
-  addItem: (title: string) => void
+type PropsType = {
+	addItem: (title:string) => void
 }
 
-export const AddItemForm = ({addItem}: Props) => {
+export const AddItemForm = ({addItem}: PropsType) => {
 
-  const [taskTitle, setTaskTitle] = useState("")
-  const [taskInputError, setTaskInputError] = useState<string | null>(null)
+	const [title, setTitle] = useState('')
+	const [error, setError] = useState<string | null>(null)
 
-  const changeTaskTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    taskInputError && setTaskInputError(null)
-    setTaskTitle(e.currentTarget.value)
-  }
+	const addItemHandler = () => {
+		if (title.trim() !== '') {
+			addItem(title.trim())
+			setTitle('')
+		} else {
+			setError('Title is required')
+		}
+	}
 
-  const addItemHandler = () => {
-    if(taskTitle.trim() !== '') {
-      addItem(taskTitle.trim())
-      setTaskTitle("")
-    } else {
-      setTaskInputError('Title should not be empty!')
-    }
-  }
-  
-  const isAddTaskBtnDisabled = !taskTitle || taskTitle.length > 25
+	const changeItemHandler = (event: ChangeEvent<HTMLInputElement>) => {
+		setTitle(event.currentTarget.value)
+	}
 
-  const userTaskTitleLengthWarning = taskTitle.length > 15 && <div>Title should contain less than 15 characters</div>
+	const addItemOnKeyUpHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+		setError(null)
+		if (event.key === 'Enter') {
+			addItemHandler()
+		}
+	}
 
-  const userEmptyTaskWarning = taskInputError && <div>{taskInputError}</div>
+	const buttonStyles = {
+		maxWidth: '39px',
+		maxHeight: '39px',
+		minWidth: '39px',
+		minHeight: '39px',
+	}
 
-  const keyDownAddItemHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-    e.key === "Enter" && addItemHandler()
-  }
+	return (
+		<div>
+			<TextField
+				error={!!error}
+				helperText={error}
+				id="outlined-basic" 
+				// label={error? error : "Enter a new title"} 
+				label="Enter a new title"
+				variant="outlined"
+				size="small"
+				// className={error ? 'error' : ''}
+				value={title}
+				onChange={changeItemHandler}
+				onKeyUp={addItemOnKeyUpHandler}/>
 
-  return (
-    <div>
-      <input 
-        className={taskInputError ? 'taskInputError' : ''}
-        value={taskTitle}
-        onChange={changeTaskTitleHandler}
-        onKeyUp={keyDownAddItemHandler}
-        />
-      <Button title="+" onClickHandler={addItemHandler} disabled={isAddTaskBtnDisabled} />
-      {userTaskTitleLengthWarning}
-      {userEmptyTaskWarning}
-    </div>
-  )
+			<Button variant="contained" onClick={addItemHandler} style={buttonStyles}>+</Button>
+			{/* {error && <div className={'error-message'}>{error}</div>} */}
+		</div>
+	)
 }
+
+
